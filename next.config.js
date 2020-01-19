@@ -26,6 +26,7 @@ module.exports = withBundleAnalyzer(
                 }),
             ],
         },
+        assetPrefix: '/api',
         pageExtensions: ['tsx'],
     })
 );
