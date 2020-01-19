@@ -17,7 +17,7 @@ jobs:
           REMOTE_HOST: ${{secrets.TencentHost}}
           REMOTE_USER: ${{secrets.TencentUser}}
           SSH_PRIVATE_KEY: ${{secrets.TencentSshPrivateKey}}
-          TARGET: '~/workspace/api'
+          TARGET: '/root/workspace/api'
           ARGS: '-avzr --delete'
       - name: 安装依赖并运行
         uses: appleboy/ssh-action@master
@@ -26,7 +26,7 @@ jobs:
           username: ${{secrets.TencentUser}}
           key: ${{secrets.TencentSshPrivateKey}}
           script: |
-            cd ~/workspace/api
+            cd /root/workspace/api
             npm i
             npm run build
             npm run stop
