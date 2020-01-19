@@ -1,0 +1,33 @@
+name: 发布到腾讯云
+
+on: # 什么时候触发
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 下载代码
+        uses: actions/checkout@master
+      - name: 复制到腾讯云服务器
+        uses: easingthemes/ssh-deploy@v2.0.8
+        env:
+          REMOTE_HOST: ${{secrets.TencentHost}}
+          REMOTE_USER: ${{secrets.TencentUser}}
+          SSH_PRIVATE_KEY: ${{secrets.TencentSshPrivateKey}}
+          SOURCE: '.'
+          TARGET: '~/workspace/api'
+          ARGS: '-avzr --delete'
+      - name: 安装依赖并运行
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.TencentHost}}
+          username: ${{secrets.TencentUser}}
+          key: ${{secrets.TencentSshPrivateKey}}
+          script: |
+            cd ~/workspace/api
+            npm i
+            npm run build
+            npm run serve
