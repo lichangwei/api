@@ -17,6 +17,7 @@ jobs:
           REMOTE_HOST: ${{secrets.TencentHost}}
           REMOTE_USER: ${{secrets.TencentUser}}
           SSH_PRIVATE_KEY: ${{secrets.TencentSshPrivateKey}}
+          SOURCE:
           TARGET: '/root/workspace/api'
           ARGS: '-avzr --delete'
       - name: 安装依赖并运行
