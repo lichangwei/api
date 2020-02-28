@@ -1,6 +1,6 @@
 import React from 'react';
 import './common.less';
-import './wechat-image-to-background.less';
+import './TransformWeChatImageToBackground.less';
 
 export default function App() {
   const onChange = React.useCallback(async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
