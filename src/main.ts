@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = Next({
-    dir: './nextjs',
+    dir: './',
     dev: process.env.NODE_ENV !== 'production',
   });
   await app.prepare();

@@ -59,11 +59,13 @@ async function transform(html: string): Promise<string> {
           const div = document.createElement('div');
           const paddingTop = (img.naturalHeight / img.naturalWidth) * 100;
           div.style.cssText = `padding-top: ${paddingTop}%; background-image: url("${img.src}"); background-size: 100%; background-repeat: no-repeat;`;
-          node.parentElement.replaceChild(div, node);
+          if (node.parentElement) {
+            node.parentElement.replaceChild(div, node);
+          }
           return resolve();
         };
         img.onerror = reject;
-        img.src = node.src || node.getAttribute('src') || node.getAttribute('data-src');
+        img.src = node.src || node.getAttribute('src') || node.getAttribute('data-src') || '';
       });
     })
   );

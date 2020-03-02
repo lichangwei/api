@@ -1,10 +1,5 @@
 {
-  "extends": [
-    "tslint:recommended",
-    "tslint-react",
-    "tslint-config-prettier",
-    "tslint-react-hooks"
-  ],
+  "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier", "tslint-react-hooks"],
   "rules": {
     "quotemark": [true, "single", "jsx-double"],
     "semicolon": [true, "always"],
