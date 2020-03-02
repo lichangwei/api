@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon src/main.ts",
     "build": "npm run build:clean && npm run build:ui && npm run build:server",
-    "serve": "cross-env NODE_ENV=production pm2 .next/production-server/main.js --name api",
+    "serve": "cross-env NODE_ENV=production pm2 start --name api .next/production-server/main.js",
     "stop": "pm2 stop api",
     "build:clean": "rimraf .next",
     "build:ui": "next build",
