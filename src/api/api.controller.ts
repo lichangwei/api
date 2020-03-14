@@ -3,17 +3,13 @@ import { Request, Response } from 'express';
 import RequestIp from 'request-ip';
 import QRCode from 'qrcode';
 import puppeteer from 'puppeteer';
-
-interface IExportPdfOptions {
-  format: puppeteer.PDFOptions['format'];
-  header?: () => string | string;
-  footer?: {
-    left?: string;
-  };
-}
+import { ExportPdfDto } from './export.pdf.dto';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Controller('/api')
 export class ApiController {
+  constructor() {}
+
   @Get('/ip')
   @Header('Content-Type', 'text/plain')
   public getClientIp(@Req() req: Request) {
@@ -21,18 +17,16 @@ export class ApiController {
   }
 
   @Get('/qrcode')
+  @Header('Content-Type', 'image/png')
+  @ApiQuery({ name: 'text', description: '二维码内容，可以是网址或普通文本' })
   public saveWish(@Query('text') text: string, @Res() res: Response) {
     QRCode.toFileStream(res, text);
   }
 
   @Post('/export/pdf')
   @Header('Content-Type', 'application/pdf')
-  public async exportPDF(
-    @Body('title') title: string,
-    @Body('html') html: string,
-    @Body('options') options: IExportPdfOptions,
-    @Res() res: Response
-  ) {
+  public async exportPDF(@Body() body: ExportPdfDto, @Res() res: Response) {
+    const { name, html, options } = body;
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
@@ -45,19 +39,11 @@ export class ApiController {
     await page.setContent(html);
     await page
       .pdf({
-        format: options.format || 'A4',
+        format: options?.format || 'A4',
         printBackground: true,
         displayHeaderFooter: true,
-        headerTemplate: '',
-        footerTemplate: `
-                  <div style="width:100%;font-size:10px;padding-left:20px;">
-                      ${options?.footer?.left || ''}
-                  </div>
-                  <div style="width:100%;font-size:10px;padding-right:20px;text-align:right;">
-                      <span class='pageNumber'></span>
-                      <span>/</span>
-                      <span class='totalPages'></span>
-                  </div>`,
+        headerTemplate: options?.header || '',
+        footerTemplate: options?.footer || ExportPdfDefaultFooter,
         margin: {
           top: '10px',
           bottom: '50px',
@@ -65,7 +51,7 @@ export class ApiController {
       })
       .then(function(buffer: Buffer) {
         res.setHeader('Content-Type', 'application/pdf');
-        res.attachment(`${title}.pdf`);
+        res.attachment(`${name}.pdf`);
         res.write(buffer);
         res.end();
       })
@@ -74,3 +60,10 @@ export class ApiController {
       });
   }
 }
+
+const ExportPdfDefaultFooter = `
+  <div style="width:100%;font-size:10px;padding-right:20px;text-align:right;">
+    <span class='pageNumber'></span>
+    <span>/</span>
+    <span class='totalPages'></span>
+  </div>`;
