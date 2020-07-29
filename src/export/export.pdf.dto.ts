@@ -6,7 +6,7 @@ class ExportPdfOptionsDto {
     description:
       'PDF文件尺寸，详细参考[puppeteer官方文档](https://github.com/puppeteer/puppeteer/blob/master/docs/api.md)',
     enum: ['Letter', 'Legal', 'Tabloid', 'Ledger', 'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6'],
-    default: 'A4',
+    default: 'A3',
     required: false,
   })
   format?: puppeteer.PDFOptions['format'];

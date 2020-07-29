@@ -24,7 +24,7 @@ export class ExportController {
     await page.setContent(html);
     await page
       .pdf({
-        format: options?.format || 'A4',
+        format: options?.format || 'A3',
         printBackground: true,
         displayHeaderFooter: true,
         headerTemplate: options?.header || '',
@@ -57,6 +57,7 @@ export class ExportController {
       defaultViewport: {
         width: 1200,
         height: 800,
+        deviceScaleFactor: 1.5,
       },
     });
     const page = await browser.newPage();
