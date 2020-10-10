@@ -52,25 +52,28 @@ export class ApiController {
 
   @Get('/chart/simple')
   @Header('Content-Type', 'image/svg+xml')
+  @ApiQuery({ name: 'ys', description: '数字数组的JSON字符串' })
+  @ApiQuery({ name: 'w', description: '宽度，默认值200' })
+  @ApiQuery({ name: 'h', description: '高度，默认值50' })
+  @ApiQuery({ name: 'c', description: '颜色值，默认值#87c14d' })
   public async createSimpleChart(
-    @Query('xs') xArrayString: string = '[1,2,3,4,5]',
     @Query('ys') yArrayString: string = '[20,75,45,50,33]',
-    @Query('width') width: number = 200,
-    @Query('height') height: number = 50,
-    @Query('color') color: string = '#87c14d'
+    @Query('w') width: number = 200,
+    @Query('h') height: number = 50,
+    @Query('c') color: string = '#87c14d'
   ) {
     const { window } = new JSDOM(`<svg viewBox="0 0 ${width} ${height}"  xmlns="http://www.w3.org/2000/svg" />`);
     const svg = d3.select(window.document).select<Element>('svg');
 
     const margin = { top: 0, right: 0, bottom: 0, left: 0 };
 
-    const xDataArray: string[] = JSON.parse(xArrayString);
     const yDataArray: number[] = JSON.parse(yArrayString);
+    const xDataArray = yDataArray.map((y, i) => String(i));
 
     const x = d3
       .scaleBand()
       .domain(xDataArray)
-      .range([margin.left, ((width - margin.right) * xDataArray.length) / (xDataArray.length - 1)]);
+      .range([margin.left, ((width - margin.right) * yDataArray.length) / (yDataArray.length - 1)]);
     const y = d3
       .scaleLinear()
       .domain([0, 100])
@@ -78,7 +81,7 @@ export class ApiController {
       .range([height - margin.bottom, margin.top]);
     const area = d3
       .area<string>()
-      .curve(d3.curveCardinal)
+      .curve(d3.curveLinear)
       .x((d) => x(d) as number)
       .y0(y(0) as number)
       .y1((d, i) => y(yDataArray[i]) as number);

@@ -15,13 +15,15 @@ export class ExportController {
     const browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
+
     const page = await browser.newPage();
     await page.setRequestInterception(true);
-
-    page.once('request', (request: puppeteer.Request) => {
+    page.once('request', async (request) => {
       request.respond({ body: html });
+      await page.setRequestInterception(false);
     });
-    await page.setContent(html);
+    await page.goto('http://www.example.com/', { waitUntil: 'load' });
+
     await page
       .pdf({
         format: options?.format || 'A3',
@@ -60,13 +62,15 @@ export class ExportController {
         deviceScaleFactor: 1.5,
       },
     });
+
     const page = await browser.newPage();
     await page.setRequestInterception(true);
-
-    page.once('request', (request: puppeteer.Request) => {
+    page.once('request', async (request) => {
       request.respond({ body: html });
+      await page.setRequestInterception(false);
     });
-    await page.setContent(html);
+    await page.goto('http://www.example.com/', { waitUntil: 'load' });
+
     await page
       .screenshot(options)
       .then(function (buffer: string | Buffer) {
