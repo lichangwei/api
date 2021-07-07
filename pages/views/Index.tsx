@@ -15,7 +15,7 @@ const Index: NextPage<IIndexProps> = () => {
       </article>
       <footer>
         <div>Copyright© 2019-2020 我的编程记录</div>
-        <a href="http://www.beian.miit.gov.cn" rel="nofollow noopener noreferrer">
+        <a href="https://beian.miit.gov.cn" rel="nofollow noopener noreferrer">
           苏ICP备19067408号-1
         </a>
       </footer>
