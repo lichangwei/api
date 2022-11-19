@@ -28,7 +28,7 @@
     "less": "3.11.1",
     "less-plugin-autoprefix": "2.0.0",
     "nest-next": "9.2.0",
-    "next": "9.3.2",
+    "next": "13.0.4",
     "nodemon": "2.0.2",
     "puppeteer": "2.1.1",
     "qrcode": "1.4.4",
